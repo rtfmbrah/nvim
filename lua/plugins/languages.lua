@@ -3,11 +3,13 @@ return {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
-        -- Assembly-IntelliSense
-        asm_lsp = {},
+        nil_ls = {
+          mason = false,
+        },
 
-        -- Vimscript-IntelliSense
-        vimls = {},
+        asm_lsp = {
+          mason = false,
+        },
       },
     },
   },
