@@ -1,7 +1,32 @@
+local workspace = require("config.workspace")
+
+local function switch_project(picker, item)
+  local path = item and (item.file or item.text)
+
+  picker:close()
+
+  if not path or path == "" then
+    vim.notify("Selected Project is not valid", vim.log.levels.ERROR)
+    return
+  end
+
+  vim.schedule(function()
+    workspace.switch(path)
+  end)
+end
+
 return {
   "folke/snacks.nvim",
   --@type snacks.Config
   opts = {
+    picker = {
+      sources = {
+        projects = {
+          confirm = switch_project,
+        },
+      },
+    },
+
     dashboard = {
       preset = {
         pick = function(cmd, opts)
