@@ -82,10 +82,6 @@ local function open_pdf_split(path)
 end
 
 local function open_pdf(path)
-  if snacks_image_supported() then
-    return open_pdf_split(path)
-  end
-
   return open_pdf_external(path)
 end
 
@@ -147,26 +143,23 @@ return {
         desc = "Open PDF in Neovim or Zathura",
       })
 
-      -- Not supported terminal? -> Open Zathura
-      if not image_terminal then
-        vim.api.nvim_create_autocmd("BufReadCmd", {
-          pattern = "*.pdf",
+      vim.api.nvim_create_autocmd("BufReadCmd", {
+        pattern = "*.pdf",
 
-          callback = function(event)
-            open_pdf_external(event.file)
+        callback = function(event)
+          open_pdf_external(event.file)
 
-            vim.bo[event.buf].buflisted = false
+          vim.bo[event.buf].buflisted = false
 
-            vim.schedule(function()
-              if vim.api.nvim_buf_is_valid(event.buf) then
-                vim.api.nvim_buf_delete(event.buf, {
-                  force = true,
-                })
-              end
-            end)
-          end,
-        })
-      end
+          vim.schedule(function()
+            if vim.api.nvim_buf_is_valid(event.buf) then
+              vim.api.nvim_buf_delete(event.buf, {
+                force = true,
+              })
+            end
+          end)
+        end,
+      })
     end,
 
     keys = {
@@ -178,7 +171,13 @@ return {
       {
         "<leader>np",
         function()
-          pick_pdf(open_pdf)
+          pick_pdf(function(path)
+            if snacks_image_supported() then
+              open_pdf_split(path)
+            else
+              open_pdf_external(path)
+            end
+          end)
         end,
         desc = "Open PDF",
       },

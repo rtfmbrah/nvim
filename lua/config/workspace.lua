@@ -49,6 +49,8 @@ local function modified_buffers()
       buffers[#buffers + 1] = name ~= "" and vim.fn.fnamemodify(name, ":~:.") or "[No Name]"
     end
   end
+
+  return buffers
 end
 
 local function has_file_buffers()
