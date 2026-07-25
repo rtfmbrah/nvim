@@ -163,6 +163,11 @@ return {
         mode = "x",
         desc = "Link Selection",
       },
+      {
+        "<leader>mp",
+        "<cmd>RenderMarkdown toggle<cr>",
+        desc = "Markdown Preview",
+      },
     },
   },
 

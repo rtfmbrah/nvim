@@ -4,6 +4,71 @@
 
 local map = vim.keymap.set
 
+-- Fenster wechseln
+map("n", "<C-h>", "<C-w>h", {
+  desc = "Window left",
+})
+
+map("n", "<C-j>", "<C-w>j", {
+  desc = "Window down",
+})
+
+map("n", "<C-k>", "<C-w>k", {
+  desc = "Window up",
+})
+
+map("n", "<C-l>", "<C-w>l", {
+  desc = "Window right",
+})
+
+-- Buffer wechseln
+map("n", "<leader>bh", "<cmd>bprevious<cr>", {
+  desc = "Previous Buffer",
+})
+
+map("n", "<leader>bl", "<cmd>bnext<cr>", {
+  desc = "Next Buffer",
+})
+
+map("n", "<leader>bd", "<cmd>bd<cr>", {
+  desc = "Delete Buffer",
+})
+
+map("n", "<leader>bo", "<cmd>BufferLineCloseOthers<cr>", {
+  desc = "Close Other Buffers",
+})
+
+-- Fenster teilen
+map("n", "<leader>sv", "<cmd>vsplit<cr>", {
+  desc = "Vertical Split",
+})
+
+map("n", "<leader>sh", "<cmd>split<cr>", {
+  desc = "Horizontal Split",
+})
+
+map("n", "<leader>sd", "<cmd>close<cr>", {
+  desc = "Close Split",
+})
+
+-- Fenstergröße
+map("n", "<A-h>", "<cmd>vertical resize -5<cr>", {
+  desc = "Window narrower",
+})
+
+map("n", "<A-l>", "<cmd>vertical resize +5<cr>", {
+  desc = "Window wider",
+})
+
+map("n", "<A-j>", "<cmd>resize -3<cr>", {
+  desc = "Window shorter",
+})
+
+map("n", "<A-k>", "<cmd>resize +3<cr>", {
+  desc = "Window taller",
+})
+
+-- Dateien und Suche
 map("n", "<leader>e", function()
   Snacks.explorer()
 end, {
@@ -17,15 +82,22 @@ end, {
 })
 
 map("n", "<leader>fg", function()
-  Snacks.picker.files()
+  Snacks.picker.grep()
 end, {
   desc = "Find Text",
 })
 
-map("n", "<leader>pw", "<cmd>Workspace<cr>", {
-  desc = "Find File",
+map("n", "<leader>fb", function()
+  Snacks.picker.buffers()
+end, {
+  desc = "Find Buffer",
 })
 
-map("n", "<leader>q", "<cmd>confirm qa<cr>", {
+-- Speichern und Beenden
+map("n", "<C-s>", "<cmd>write<cr>", {
+  desc = "Save File",
+})
+
+map("n", "<leader>qq", "<cmd>confirm qa<cr>", {
   desc = "Quit Neovim",
 })

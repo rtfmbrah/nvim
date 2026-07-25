@@ -78,6 +78,14 @@ local function open_pdf_split(path)
 
   vim.cmd("vsplit " .. vim.fn.fnameescape(pdf))
 
+  local pdf_window = vim.api.nvim_get_current_win()
+  local width = math.floor(vim.o.columns / 2)
+
+  vim.api.nvim_win_set_width(pdf_window, width)
+  vim.wo.winfixwidth = true
+
+  vim.cmd("wincmd h")
+
   return true
 end
 
@@ -108,6 +116,36 @@ local function pick_pdf(opener)
       end)
     end,
   })
+end
+
+local function markdown_to_pdf()
+  local input = vim.api.nvim_buf_get_name(0)
+
+  if input == "" or vim.bo.filetype ~= "markdown" then
+    vim.notify("Open a Markdown file first", vim.log.levels.ERROR)
+    return
+  end
+
+  vim.cmd.write()
+
+  local output = vim.fn.fnamemodify(input, ":r") .. ".pdf"
+
+  vim.system({
+    "pandoc",
+    input,
+    "-o",
+    output,
+    "--pdf-engine=xelatex",
+  }, {}, function(result)
+    vim.schedule(function()
+      if result.code ~= 0 then
+        vim.notify(result.stderr, vim.log.levels.ERROR)
+        return
+      end
+
+      vim.notify("Created " .. output)
+    end)
+  end)
 end
 
 return {
@@ -141,6 +179,10 @@ return {
         bang = true,
         complete = "file",
         desc = "Open PDF in Neovim or Zathura",
+      })
+
+      vim.api.nvim_create_user_command("MarkdownPdf", markdown_to_pdf, {
+        desc = "Convert current Markdown file to PDF",
       })
 
       vim.api.nvim_create_autocmd("BufReadCmd", {
@@ -180,6 +222,22 @@ return {
           end)
         end,
         desc = "Open PDF",
+      },
+      {
+        "<leader>mc",
+        markdown_to_pdf,
+        desc = "Markdown to PDF",
+      },
+      {
+        "<leader>po",
+        function()
+          local path = vim.fn.input("PDF: ", workspace.get() .. "/", "file")
+
+          if path ~= "" then
+            open_pdf(path)
+          end
+        end,
+        desc = "Open PDF beside code",
       },
     },
   },
