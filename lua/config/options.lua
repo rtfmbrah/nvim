@@ -4,4 +4,6 @@
 
 vim.g.root_spec = { "cwd" }
 
+vim.opt.spelllang = { "de", "en" }
+
 require("config.workspace").setup()

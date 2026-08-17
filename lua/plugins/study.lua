@@ -208,7 +208,7 @@ return {
       {
         "<leader>n",
         "",
-        desc = "+notes/study",
+        desc = "+study",
       },
       {
         "<leader>np",
